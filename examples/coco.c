@@ -320,15 +320,19 @@ void test_coco(char *cfgfile, char *weightfile, char *filename, float thresh)
         printf("%s: Predicted in %f seconds.\n", input, sec(clock()-time));
 
         int nboxes = 0;
-        detection *dets = get_network_boxes(net, 1, 1, thresh, 0, 0, 0, &nboxes);
+        detection *dets = get_network_boxes(net, im.w, im.h, thresh, 0, 0, 0, &nboxes);
         if (nms) do_nms_sort(dets, l.side*l.side*l.n, l.classes, nms);
 
         draw_detections(im, dets, l.side*l.side*l.n, thresh, coco_classes, alphabet, 80);
         save_image(im, "prediction");
-        show_image(im, "predictions", 0);
+        show_image(im, "predictions");
         free_detections(dets, nboxes);
         free_image(im);
         free_image(sized);
+#ifdef OPENCV
+        cvWaitKey(0);
+        cvDestroyAllWindows();
+#endif
         if (filename) break;
     }
 }
