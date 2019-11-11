@@ -260,7 +260,9 @@ void forward_detection_layer_gpu(const detection_layer l, network net)
         return;
     }
 
-    cuda_pull_array(net.input_gpu, net.input, l.batch*l.inputs);
+    //float *in_cpu = calloc(l.batch*l.inputs, sizeof(float));
+    //float *truth_cpu = 0;
+
     forward_detection_layer(l, net);
     cuda_push_array(l.output_gpu, l.output, l.batch*l.outputs);
     cuda_push_array(l.delta_gpu, l.delta, l.batch*l.inputs);
